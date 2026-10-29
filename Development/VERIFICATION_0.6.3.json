@@ -1,0 +1,81 @@
+{
+  "version": "0.6.3",
+  "status": "verified",
+  "unit_tests_passed": 111,
+  "unit_test_log": "Archive/tests_0.6.3_final.log",
+  "actual_batch": {
+    "status": "verified",
+    "real_gpg_decrypt": true,
+    "real_ocr": true,
+    "sequential_order": [
+      "extract:261029_A1015L_A1015L_Approval_Enforcement_BAY_29102026.pdf.gpg",
+      "ocr:1",
+      "extract:261029_A1015L_A1015L_Approval_Enforcement_BAY_29102026_2.pdf.gpg",
+      "ocr:2",
+      "extract:261029_A1015L_A1015L_Approval_Enforcement_BAY_29102026_3.pdf.gpg",
+      "ocr:3",
+      "extract:261029_A1015L_A1015L_Approval_Enforcement_BAY_29102026_4.pdf.gpg",
+      "ocr:4",
+      "prepare_mail",
+      "simulated_send"
+    ],
+    "one_flat_zip": true,
+    "simulated_deliveries": 1,
+    "original_sources_unchanged": true,
+    "production_emails_sent": 0,
+    "production_database_writes": 0,
+    "pdf_count": 4,
+    "excel_count": 4,
+    "reports": [
+      {
+        "file": "261029_A1015L_A1015L_Approval_Enforcement_BAY_29102026.xlsx",
+        "sheets": 1,
+        "rows": 2
+      },
+      {
+        "file": "261029_A1015L_A1015L_Approval_Enforcement_BAY_29102026_2.xlsx",
+        "sheets": 1,
+        "rows": 3
+      },
+      {
+        "file": "261029_A1015L_A1015L_Approval_Enforcement_BAY_29102026_3.xlsx",
+        "sheets": 1,
+        "rows": 4
+      },
+      {
+        "file": "261029_A1015L_A1015L_Approval_Enforcement_BAY_29102026_4.xlsx",
+        "sheets": 1,
+        "rows": 5
+      }
+    ],
+    "archive_names": [
+      "261029_A1015L_A1015L_Approval_Enforcement_BAY_29102026.pdf",
+      "261029_A1015L_A1015L_Approval_Enforcement_BAY_29102026_2.pdf",
+      "261029_A1015L_A1015L_Approval_Enforcement_BAY_29102026_3.pdf",
+      "261029_A1015L_A1015L_Approval_Enforcement_BAY_29102026_4.pdf",
+      "261029_A1015L_A1015L_Approval_Enforcement_BAY_29102026.xlsx",
+      "261029_A1015L_A1015L_Approval_Enforcement_BAY_29102026_2.xlsx",
+      "261029_A1015L_A1015L_Approval_Enforcement_BAY_29102026_3.xlsx",
+      "261029_A1015L_A1015L_Approval_Enforcement_BAY_29102026_4.xlsx"
+    ],
+    "attachment": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Routine_System\\Archive\\enforcement_0.6.3_actual\\Logs\\Enforcement\\Process\\20261029_175628_946ce6b0\\Delivery\\3d47f53c\\Enforcement_PDF_Excel.zip"
+  },
+  "native_recipient_persistence": {
+    "status": "verified",
+    "ui_save_and_reopen_preserves_enforcement_recipients": true,
+    "other_incomplete_workflow_does_not_block_save": true,
+    "production_start_clicked": false,
+    "production_emails_sent": 0,
+    "production_database_writes": 0
+  },
+  "live_readonly_intake": "Mail dated 29/10/2026 resolves all four current BAY sources; earlier code rejected multiple inferred files and image OCR alone found only two names.",
+  "recipient_diagnostics": "Observed profile has empty Enforcement To/CC. Last delivery evidence has recipients; no past/other-task recipient was silently restored. Profile was not modified during verification.",
+  "preparation_and_delivery": "Sequential per source; one Excel per source; all PDFs and Excels in one flat password ZIP; one delivery only after all OCR completes; incomplete recipients hold ready_to_send.",
+  "legacy_pending_reviews": "Versions 4 and 5 remain deliverable through the same guarded pending-delivery action.",
+  "production_emails_sent": 0,
+  "production_database_writes": 0,
+  "production_profile_modified": false,
+  "git_status": "Exact verified source commit is recorded in release build.json and delivery receipt.",
+  "git_author": "FKP_Routine_System",
+  "git_email": ""
+}

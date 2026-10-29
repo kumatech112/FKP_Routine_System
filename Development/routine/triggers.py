@@ -162,6 +162,17 @@ def infer_sources(folder,match,task):
         candidates.append(path)
     logical={}
     for path in candidates:logical.setdefault(logical_name(path.name),[]).append(path)
+    if task=='enforcement':
+        result=[]
+        for options in logical.values():
+            bases={re.sub(r'\.(gpg|pgp)$','',p.name,flags=re.I).casefold() for p in options}
+            encrypted=[p for p in options if p.suffix.casefold() in ('.gpg','.pgp')]
+            if len(bases)!=1 or len(encrypted)>1:
+                raise ValidationError('พบ Enforcement ชื่อเดียวกันหลายชุด ต้องระบุชื่อไฟล์ให้ชัดเจน')
+            chosen=encrypted or options
+            if len(chosen)!=1:raise ValidationError('พบไฟล์ Enforcement ซ้ำหลายชุด')
+            result.extend(chosen)
+        return sorted(result,key=lambda p:p.name.casefold())
     if len(logical)>1:raise ValidationError('มีหลายไฟล์ตรงคำอธิบายเมล ต้องมีชื่อไฟล์ที่เจาะจงกว่านี้')
     if not logical:return []
     options=next(iter(logical.values()))

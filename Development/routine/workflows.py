@@ -57,7 +57,10 @@ class FileWorkflowService(PerformanceService):
                 if unit_key in self.ledger.data["mails"]:
                     from .enforcement_flow import can_retry_before_mail
                     old_key=self.ledger.data["mails"][unit_key].get("file")
-                    if not can_retry_before_mail(self.ledger.data["files"].get(old_key,{})):
+                    previous=self.ledger.data["files"].get(old_key,{})
+                    if not can_retry_before_mail(previous):
+                        if previous.get("status") in ("ready_to_send","needs_review"):
+                            self.notify({"kind":"status","step":"Enforcement: OCR ครบแล้ว รอส่งงานที่ค้าง กรุณาตรวจผู้รับในตั้งค่าอีเมล"})
                         continue
                 receipt = self.process_unit(reference, [source for source, _ in candidates], runtime, outlook, unit_key)
                 if receipt:
@@ -91,7 +94,25 @@ class FileWorkflowService(PerformanceService):
                 if cached.exists():
                     item=read(cached);body+='\n'+item['text']+'\n'+item['compact']
                 else:body+='\n'+image_mail_text(images,self.values['ocr_path'],ocr_job)
-        names=reference.match.get('file_names') or body_names(body,self.task)
+        names=(body_names(body,self.task) or reference.match.get('file_names')) if self.task=='enforcement' else (reference.match.get('file_names') or body_names(body,self.task))
+        if names:
+            from .triggers import logical_name
+            names=list({logical_name(name):name for name in names}.values())
+        if self.task=='enforcement' and not reference.match.get('file_names'):
+            from .triggers import infer_sources,names as parse_names,logical_name
+            inferred_match=dict(reference.match)
+            parsed=parse_names(body,'enforcement')
+            dates={item['mail_date'] for item in parsed}
+            decisions={item['decision'] for item in parsed}
+            if len(dates)==len(decisions)==1:
+                inferred_match.update(mail_date=next(iter(dates)),decision=next(iter(decisions)))
+            inferred=[] if parsed and (len(dates)!=1 or len(decisions)!=1) else infer_sources(runtime['scan']['network_folder'],inferred_match,self.task)
+            if inferred:
+                candidates=[(path,path.name) for path in inferred]
+                identities={logical_name(path.name) for path in inferred}
+                candidates.extend((locate_body_file(runtime['scan']['network_folder'],name),name)
+                    for name in (names or []) if logical_name(name) not in identities)
+                return candidates
         if names:
             return [(locate_body_file(runtime['scan']['network_folder'],name),name) for name in names]
         from .triggers import infer_sources
@@ -211,7 +232,7 @@ def run(values, stop, notify=None, once=False):
         for task in selected:
             task_notify = lambda event, name=task: notify({**event, "task": name})
             try:
-                problems=dependency_checks(values,task,write_probe=True)
+                problems=dependency_checks(values,task,write_probe=True,include_delivery=task!="enforcement")
                 if problems:raise ValidationError('; '.join(problems))
                 if task=='performance':
                     with DailyDatabase(values['database']) as database:database.schema()
@@ -219,6 +240,8 @@ def run(values, stop, notify=None, once=False):
                         legacy_loader=lambda _,name=task:runtime_settings(values,name))
                 else:service=FileWorkflowService(values,task,stop,task_notify)
                 services[task]=service
+                if task=="enforcement" and not runtime_settings(values,task)["mail"].get("to"):
+                    task_notify({"kind":"status","step":"Enforcement: จะเตรียม PDF/Excel ก่อน และรอระบุผู้รับก่อนส่งเมล"})
             except Exception as error:
                 detail=str(error) if isinstance(error,ValidationError) else 'เชื่อมส่วนประกอบของงานไม่สำเร็จ'
                 task_notify({'kind':'scan','phase':'error','time':now().isoformat(),

@@ -75,5 +75,9 @@
   "enforcement_precision": {
     "version": "0.6.2",
     "scope": "Native Thai TXT spacing; colored-header and aspect processing; numeric fields; direct hidden Tesseract calls; PDF Outlook timestamp final column with multi-view time consensus; PDF paths without artificial Input folders; collision-safe naming."
+  },
+  "enforcement_batch": {
+    "version": "0.6.3",
+    "scope": "Exact-date same-decision multi-file intake; partial inline filename OCR supplemented by exact source identities; sequential decrypt/extract -> per-source OCR -> per-source Excel; one flat password ZIP and one delivery; recipient save isolated from other incomplete workflows."
   }
 }

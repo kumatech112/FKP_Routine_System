@@ -99,11 +99,6 @@ def validate(values):
             raise ValidationError("ตรวจกล่องเมลและโฟลเดอร์ต้นทางของ " + TASKS[name])
         if name != "customer_documents":
             re.compile(flow["subject_regex"])
-    for task, flow in values["workflows"].items():
-        if task != "enforcement" and flow.get("enabled"):
-            recipients = values["mail"].get("workflow_recipients", {}).get(task, {}).get("to", [])
-            if not recipients or not str(values["mail"].get("send_from", "")).strip():
-                raise ValidationError("ระบุผู้ส่งและผู้รับของ " + TASKS[task])
     return values
 
 
@@ -185,7 +180,7 @@ def runtime_settings(values, task):
             "archive": deepcopy(values["archive"]), "poll": values["poll"]}
 
 
-def dependency_checks(values, task, write_probe=False):
+def dependency_checks(values, task, write_probe=False, include_delivery=True):
     """Read-only checks; never change ACLs, trust policies, registry or Office."""
     import winreg
     problems = []
@@ -193,7 +188,7 @@ def dependency_checks(values, task, write_probe=False):
         problems.append("ยังไม่ได้ตั้งรหัส ZIP ของผู้ใช้นี้")
     if task == "enforcement":
         recipients = values["mail"].get("workflow_recipients", {}).get(task, {}).get("to", [])
-        if not recipients or not str(values["mail"].get("send_from", "")).strip():
+        if include_delivery and (not recipients or not str(values["mail"].get("send_from", "")).strip()):
             problems.append("ระบุ Enforcement To และบัญชีผู้ส่งในตั้งค่าอีเมล")
         if not values["secrets"].get("zip_password") and not values["mail"].get("zip_password_required"):
             problems.append("ระบุรหัส ZIP สำหรับ Enforcement")
@@ -202,6 +197,10 @@ def dependency_checks(values, task, write_probe=False):
     if task=="performance_success_rate":
         if not values["mail"].get("zip_attachment",True) or not values["secrets"].get("zip_password"):
             problems.append("Success Rate ต้องเปิด ZIP และใส่รหัสก่อนส่ง")
+    if task!="enforcement" and include_delivery:
+        recipients=values["mail"].get("workflow_recipients",{}).get(task,{}).get("to",[])
+        if not recipients or not str(values["mail"].get("send_from","")).strip():
+            problems.append("ระบุผู้ส่งและผู้รับของ "+TASKS[task])
     required = ["Outlook.Application"]
     if task == "performance":
         required += ["Excel.Application", "DAO.DBEngine.120"]

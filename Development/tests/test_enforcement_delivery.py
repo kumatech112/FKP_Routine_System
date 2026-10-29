@@ -77,6 +77,7 @@ class DeliveryTests(unittest.TestCase):
         self.reference=MailRef('entry','store','FW: enforcement (TEST)',self.source.name,{})
         self.events=[]
         self.fail_send=False
+        self.expected_excel_count=1
         test=self
         class FakeOutlook:
             def prepare_forward(self,reference,attachment,settings):
@@ -85,14 +86,16 @@ class DeliveryTests(unittest.TestCase):
                 with pyzipper.AESZipFile(attachment) as archive:
                     archive.setpassword(b'fixture-only-zip')
                     names=archive.namelist()
-                    test.assertIn('Enforcement.xlsx',names)
+                    excels=[x for x in names if x.endswith('.xlsx')]
+                    test.assertEqual(len(excels),test.expected_excel_count)
+                    test.assertFalse(any('/' in name for name in names))
                     pdfs=[x for x in names if x.endswith('.pdf')]
                     test.assertTrue(pdfs)
                     test.assertFalse(any(x.endswith('.txt') for x in names))
                     for name in pdfs:test.assertEqual(archive.read(name),b'fixture pdf')
                     from io import BytesIO
                     from openpyxl import load_workbook
-                    book=load_workbook(BytesIO(archive.read('Enforcement.xlsx')))
+                    book=load_workbook(BytesIO(archive.read(excels[0])))
                     test.assertEqual(book.sheetnames,['ตาราง'])
                     test.assertEqual(book.active.max_column,21)
                     test.assertEqual(book.active.max_row,2)
@@ -148,7 +151,8 @@ class DeliveryTests(unittest.TestCase):
         review=json.loads(Path(self.state()['review']).read_text(encoding='utf-8'))
         self.assertFalse(review['review_required'])
         self.assertFalse(review['human_reviewed'])
-        self.assertTrue(all(c['state']=='needs_review' for c in review['cells']))
+        cells=[c for item in review['sets'] for c in json.loads(Path(item['review']).read_text(encoding='utf-8'))['cells']]
+        self.assertTrue(all(c['state']=='needs_review' for c in cells))
         self.assertIsNone(self.execute())
         self.assertEqual(self.events.count('mail'),1)
 
@@ -205,13 +209,15 @@ class DeliveryTests(unittest.TestCase):
         self.assertEqual(self.execute()['status'],'failed')
         self.assertNotIn('mail',self.events)
 
-    def test_multiple_sources_are_one_ocr_and_one_zip(self):
+    def test_multiple_sources_are_sequential_ocr_sets_and_one_zip(self):
         other=self.root/'A1015L_Reject_Enforcement_28102026.pdf.gpg'
         other.write_bytes(b'another encrypted fixture')
+        self.expected_excel_count=2
         receipt=self.execute(sources=[self.source,other])
         self.assertEqual(receipt['result']['pdfs'],2)
         self.assertEqual(self.events.count('mail'),1)
-        self.assertEqual(self.events.count('ocr'),1)
+        self.assertEqual(self.events.count('ocr'),2)
+        self.assertEqual(self.events,['extract','ocr','extract','ocr','prepared','mail'])
 
     def test_old_pre_mail_failure_is_retried_once_through_poll_after_upgrade(self):
         self.values['workflows']['enforcement']['network_folder']=str(self.root)
