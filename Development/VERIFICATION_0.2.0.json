@@ -1,0 +1,65 @@
+{
+  "version": "0.2.0",
+  "verified_at_utc": "2026-10-29T01:31:14.203Z",
+  "checks": {
+    "unit_tests": {
+      "passed": 31,
+      "note": "Passed in the preceding build session; application source unchanged since that check."
+    },
+    "source_gui": {
+      "status": "verified",
+      "tasks": 4,
+      "pages": 3,
+      "profile_encrypted": true,
+      "production_monitor_started": false,
+      "emails_sent": 0,
+      "database_writes": 0
+    },
+    "packaged_gui": {
+      "status": "verified",
+      "exit_code": 0,
+      "production_start_clicked": false,
+      "database_writes": 0,
+      "emails_sent": 0
+    },
+    "packaged_payment": {
+      "task": "payment_online",
+      "verified": true,
+      "database_writes": 0,
+      "emails_sent": 0,
+      "records": 10,
+      "action_rows": 10,
+      "output": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Routine_System\\Archive\\frozen_payment_0.2.0\\Process\\A1015_PaymentPostWO_Online_R3_28102026_processed.xlsx"
+    },
+    "packaged_enforcement": {
+      "task": "enforcement",
+      "verified": true,
+      "database_writes": 0,
+      "emails_sent": 0,
+      "pages": 1,
+      "cells": 63,
+      "status": "needs_review"
+    },
+    "daily": {
+      "status": "verified",
+      "mode": "daily",
+      "mail_stage": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Routine_System\\Archive\\verification_20261029_02\\Performance\\Process\\verification\\02_Daily_Recovery_Performance_Oct26.xlsx",
+      "database_stage": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Routine_System\\Archive\\verification_20261029_02\\Performance\\Process\\verification\\05_Daily_Recovery_Performance_Oct26.xlsx",
+      "records": 1204,
+      "database_writes": 0,
+      "emails_sent": 0,
+      "source_preserved": true
+    },
+    "manifest_execution_level": "asInvoker",
+    "release_file_count": 1356,
+    "operational_data_or_private_keys_bundled": false,
+    "shortcut_target": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Routine_System\\Program\\FKP_Routine_System_0.2.0\\FKP_Routine_System.exe"
+  },
+  "limitations": [
+    "No production email sent or production database writes during verification.",
+    "Execution on another physical Windows machine has not been verified.",
+    "Enforcement OCR requires explicit review of all fields before completion.",
+    "Git commit incomplete: author name and email are not configured."
+  ],
+  "source_commit": null
+}

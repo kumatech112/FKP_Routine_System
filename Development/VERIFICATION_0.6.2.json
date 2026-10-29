@@ -1,0 +1,86 @@
+{
+  "version": "0.6.2",
+  "status": "verified",
+  "unit_tests_passed": 99,
+  "unit_test_log": "Archive/tests_0.6.2_release.log",
+  "frozen": {
+    "status": "verified",
+    "frozen_tests_passed": 7,
+    "compiled_modules_match_final_source": [
+      "routine.ocr",
+      "routine.pdf_timestamp",
+      "routine.enforcement",
+      "routine.enforcement_flow",
+      "routine.workflows",
+      "routine.ui_all"
+    ],
+    "actual_timestamp": "พ. 28/10/2026 17:53",
+    "actual_thai_cell": "ไม่พบ payment ต่อเนื่อง",
+    "production_emails_sent": 0,
+    "production_database_writes": 0
+  },
+  "samples": {
+    "verified": true,
+    "pdfs": 4,
+    "pages": 6,
+    "worksheets": 4,
+    "columns": [
+      19,
+      21,
+      21,
+      22
+    ],
+    "rows": [
+      1,
+      2,
+      3,
+      3
+    ],
+    "timestamps": [
+      "",
+      "อ. 27/10/2026 09:30",
+      "อ. 27/10/2026 09:32",
+      "พ. 28/10/2026 17:53"
+    ],
+    "missing_timestamp_blank_for_reject": true,
+    "production_emails_sent": 0,
+    "production_database_writes": 0
+  },
+  "end_to_end": {
+    "status": "verified",
+    "source": "Copy of encrypted source from failed production job",
+    "real_gpg_decrypt": true,
+    "real_password_zip_extraction": true,
+    "real_ocr": true,
+    "table_only": true,
+    "password_zip_with_original_pdf_and_excel": true,
+    "deduplication_verified": true,
+    "simulated_delivery_calls": 1,
+    "production_emails_sent": 0,
+    "production_database_writes": 0,
+    "pdf_count": 1,
+    "sheets": [
+      "ตาราง"
+    ],
+    "columns": 22,
+    "data_rows": 3,
+    "attachment": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Routine_System\\Archive\\enforcement_0.6.2_verified\\Logs\\Enforcement\\Process\\20261029_171309_cfecef79\\Delivery\\cd4dface\\Enforcement_PDF_Excel.zip"
+  },
+  "pdf_paths": "PDF/original.pdf; no generated Input_1 folders; duplicate relative paths get a numeric suffix",
+  "ocr_accuracy": "Improved Thai spacing/combining marks, aspect-ratio candidates, colored headers, green-corner cleanup and numeric fields. OCR still depends on source clarity; no names/financial figures are rewritten with a spelling dictionary.",
+  "timestamp": "Final column วันที่อีเมลใน PDF; Thai weekday + dd/MM/yyyy HH:mm; actual PDF caption only. Date must be unique; time must agree in at least two segmentation views. Blank/logged if absent or ambiguous. Same PDF timestamp fills continued pages.",
+  "background": "Direct Tesseract calls use CREATE_NO_WINDOW and STARTF_USESHOWWINDOW/SW_HIDE for language checks and all OCR. GPG/UnRAR already use CREATE_NO_WINDOW.",
+  "production_emails_sent": 0,
+  "production_database_writes": 0,
+  "native_ui": {
+    "status": "verified",
+    "exit_code": 0,
+    "production_start_clicked": false,
+    "database_writes": 0,
+    "emails_sent": 0
+  },
+  "git_status": "Verified source is committed; exact hash is recorded in release build.json and the delivery receipt.",
+  "git_author": "FKP_Routine_System",
+  "git_email": "",
+  "git_identity_scope": "Repository-local only; no inferred email; no remote"
+}

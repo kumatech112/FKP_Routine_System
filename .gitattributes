@@ -1,0 +1,7 @@
+* text=auto eol=lf
+*.xls binary
+*.xlsx binary
+*.ico binary
+*.png binary
+# Preserve upstream license bytes and formatting.
+Development/third_party_licenses/** -text whitespace=-trailing-space,-blank-at-eof

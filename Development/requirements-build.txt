@@ -1,0 +1,5 @@
+-r requirements.txt
+pyinstaller==6.20.0
+# Optional RAR crypto backends included by the frozen build.
+pycryptodome==3.23.0
+cryptography==46.0.5

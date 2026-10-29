@@ -1,0 +1,78 @@
+{
+  "version": "0.6.1",
+  "verified_at_utc": "2026-10-29T09:28:36.187Z",
+  "unit_tests": {
+    "passed": 92,
+    "log": "Archive/tests_0.6.1.log"
+  },
+  "enforcement_actual": {
+    "status": "verified",
+    "source": "Copy of encrypted source from failed production job",
+    "real_gpg_decrypt": true,
+    "real_password_zip_extraction": true,
+    "real_ocr": true,
+    "table_only": true,
+    "password_zip_with_original_pdf_and_excel": true,
+    "retry_before_mail_verified": true,
+    "simulated_delivery_calls": 1,
+    "production_emails_sent": 0,
+    "production_database_writes": 0,
+    "pdf_count": 1,
+    "sheets": [
+      "ตาราง"
+    ],
+    "columns": 21,
+    "data_rows": 3,
+    "attachment": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Routine_System\\Archive\\enforcement_0.6.1_actual\\Logs\\Enforcement\\Process\\20261029_161811_ea3481b6\\Delivery\\143f5e15\\Enforcement_PDF_Excel.zip"
+  },
+  "payment": {
+    "query_sheet": "Query1",
+    "query_hidden": true,
+    "active_sheet": "Table1",
+    "query_values_preserved": true,
+    "processed_suffix_removed_from_excel_and_zip": true,
+    "verified_inside_password_zip": true
+  },
+  "daily_database": {
+    "database": "\\\\10.0.0.97\\kuma$\\X\\FKP Performance.accdb",
+    "database_writes": 0,
+    "tables": [
+      {
+        "report": "daily",
+        "table": "[dbo].[PFM_DAILY]",
+        "fields": 11
+      }
+    ],
+    "status": "verified",
+    "mail_stage": "02",
+    "database_stage": "05",
+    "mode": "daily",
+    "adjust_enabled": false
+  },
+  "packaged_gui": {
+    "status": "verified",
+    "exit_code": 0,
+    "production_start_clicked": false,
+    "database_writes": 0,
+    "emails_sent": 0
+  },
+  "frozen_checks": {
+    "status": "verified",
+    "frozen_tests_passed": 4,
+    "frozen_aes_zip_and_payment_presentation": true,
+    "frozen_actual_zipcrypto_extracted": true,
+    "frozen_retry_guards_verified": true,
+    "production_emails_sent": 0,
+    "production_database_writes": 0
+  },
+  "retry_policy": "One eligible old pre-mail failure may retry after the encrypted-ZIP fix. Previous evidence is kept; pending/unknown/sent/draft or delivery-ready jobs never auto-replay.",
+  "production_emails_sent": 0,
+  "production_database_writes": 0,
+  "source_commit": null,
+  "limitations": [
+    "OCR was verified on a copy of the actual failed input with a simulated mail adapter; no production email was sent.",
+    "Daily connectivity/schema was verified read-only; production inserts were not run during verification.",
+    "Another physical Windows machine was not exercised.",
+    "Git author name/email not configured; source is staged without a commit."
+  ]
+}

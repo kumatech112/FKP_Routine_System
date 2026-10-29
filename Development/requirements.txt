@@ -1,0 +1,10 @@
+pywin32==311
+pyzipper==0.4.0
+pycryptodomex==3.23.0
+openpyxl==3.1.5
+Pillow==11.2.1
+numpy==2.2.6
+opencv-python==4.12.0.88
+pymupdf==1.27.2.2
+pytesseract==0.3.13
+rarfile==4.2

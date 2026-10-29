@@ -1,0 +1,88 @@
+{
+  "version": "0.6.0",
+  "verified_at_utc": "2026-10-29T08:44:26.265Z",
+  "unit_tests": {
+    "passed": 86,
+    "log": "Archive/tests_0.6.0.log"
+  },
+  "source_gui": {
+    "status": "verified",
+    "tasks": 5,
+    "pages": 3,
+    "profile_encrypted": true,
+    "sender_accounts_async": true,
+    "typed_sender_preserved_on_refresh_and_failure": true,
+    "status_panel_present": true,
+    "production_monitor_started": false,
+    "emails_sent": 0,
+    "database_writes": 0
+  },
+  "packaged_gui": {
+    "status": "verified",
+    "exit_code": 0,
+    "production_start_clicked": false,
+    "database_writes": 0,
+    "emails_sent": 0
+  },
+  "packaged_runtime": {
+    "frozen_trigger_regression_verified": true,
+    "status": "verified",
+    "frozen_rar_and_monitor_modules": true,
+    "bundled_unrar_sha256": "672454e60763f06dbe80d122b4b17d389bfe2734a186d76ee05025a76d952a64",
+    "bundled_unrar_extracted_rar5": true,
+    "nested_unicode_bytes_match": true,
+    "production_emails_sent": 0,
+    "production_database_writes": 0
+  },
+  "profile_upgrade": {
+    "from": "0.5.0",
+    "managed_gpg_ocr_paths_rebased": true,
+    "mail_window_controls_migrated": true
+  },
+  "trigger_policy": {
+    "tasks": 5,
+    "priority": [
+      "Body filename",
+      "attachment filename",
+      "Subject filename",
+      "related Subject/Body words"
+    ],
+    "includes_read_mail": true,
+    "default_lookback_hours": 24,
+    "default_items_per_folder": 200,
+    "office_placeholder": "XX -> 15",
+    "extension_optional_in_mail": true,
+    "critical_date_round_office_remain_exact": true,
+    "recall_and_adjust_excluded": true,
+    "archived_sources_not_replayed": true
+  },
+  "regressions_fixed": [
+    "Customer Body A10xxL and names without extensions",
+    "Read mail skipped before classification",
+    "Outgoing document/Success Rate ZIP collided with decrypted input ZIP",
+    "Unready workflow stopped other ready selected workflows",
+    "Old monthly Daily mail could select a new transport file",
+    "Cutoff mismatch could reserve a file against the correct Daily mail"
+  ],
+  "live_read_only": {
+    "evidence": "Archive/live_intake_0.6.0.json",
+    "task_counts": {
+      "payment_online": 18,
+      "performance": 2,
+      "customer_documents": 5,
+      "enforcement": 1,
+      "performance_success_rate": 2
+    },
+    "customer_documents_newly_recognized": 4,
+    "source_state": "No customer source archive in root at inspection; Round1 29102026 found in 03 Check; Round2 29102026 missing from source."
+  },
+  "production_emails_sent": 0,
+  "production_database_writes": 0,
+  "source_commit": null,
+  "limitations": [
+    "Opening the GUI is idle; owner must restart into 0.6.0 and explicitly Start selected ready tasks.",
+    "Mail outside the saved lookback/items limit is not scanned; limits are editable in General settings.",
+    "Live delivery and another physical Windows machine not exercised.",
+    "Git author name/email not configured; source is staged without a commit."
+  ]
+}

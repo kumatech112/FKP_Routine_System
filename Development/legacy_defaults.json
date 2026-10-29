@@ -1,0 +1,109 @@
+{
+  "outlook": {
+    "store_name": "data@tradeconnection.co.th",
+    "folder_path": [
+      "กล่องจดหมายเข้า",
+      "Payment"
+    ],
+    "sender_contains": [],
+    "subject_regex": "^Online\\s+Payment\\s+Pre\\s+WO\\s*&\\s*Post\\s+WO\\s+with\\s+(?P<mail_date>\\d{2}/\\d{2}/\\d{4}|\\d{8})\\s+Round\\s*(?P<round>\\d+)\\s*$",
+    "unread_only": true,
+    "received_within_hours": 24,
+    "max_scan_items": 200,
+    "mark_as_read": false,
+    "open_email_window": true
+  },
+  "workflows": {
+    "payment_online": {
+      "enabled": true,
+      "label": "Payment Online",
+      "store_name": "data@tradeconnection.co.th",
+      "folder_path": [
+        "กล่องจดหมายเข้า",
+        "Payment"
+      ],
+      "network_folder": "//10.0.0.243/pgp-data$",
+      "subject_regex": "^Online\\s+Payment\\s+Pre\\s+WO\\s*&\\s*Post\\s+WO\\s+with\\s+(?P<mail_date>\\d{2}/\\d{2}/\\d{4}|\\d{8})\\s+Round\\s*(?P<round>\\d+)\\s*$",
+      "network_file_regex": "^(?P<file_date>\\d{6})_A1015_A1015_TSS_PAYMENT_Online(?P<round>\\d+)\\.zip(?:\\.(?:gpg|pgp))?$",
+      "excel_regex": "(?i)^A1015_PaymentPostWO_Online_R(?P<round>\\d+)_\\d{8}\\.xlsx$",
+      "require_exact_date_match": true,
+      "processor": "payment_online"
+    },
+    "performance": {
+      "enabled": true,
+      "label": "Performance",
+      "store_name": "data@tradeconnection.co.th",
+      "folder_path": [
+        "กล่องจดหมายเข้า",
+        "Performance"
+      ],
+      "network_folder": "//10.0.0.243/pgp-data$",
+      "subject_regex": "^Report\\s+Daily\\s+Recovery\\s+Performance\\s+(?P<month_name>[A-Za-z]{3})'(?P<year>\\d{2}).*?\\bas\\s+of\\s+(?P<mail_date>\\d{2}/\\d{2}/\\d{4}|\\d{8})\\s*$",
+      "network_file_regex": "^(?P<file_date>\\d{6})_A1015_A1015_Daily_Recovery_Performance_(?P<month_token>[A-Za-z]{3}\\d{2})\\.zip(?:\\.(?:gpg|pgp))?$",
+      "excel_regex": "(?i)^Daily_Recovery_Performance_(?P<month_token>[A-Za-z]{3}\\d{2})\\.xlsm$",
+      "require_exact_date_match": false,
+      "processor": "performance"
+    },
+    "customer_documents": {
+      "enabled": true,
+      "label": "Customer Documents",
+      "store_name": "data@tradeconnection.co.th",
+      "folder_path": [
+        "กล่องจดหมายเข้า",
+        "เอกสารลูกค้า"
+      ],
+      "network_folder": "//10.0.0.243/pgp-data$",
+      "subject_regex": "^เอกสารลูกค้าจาก\\s+E-Mail\\s+กลาง\\s+รอบ\\s*(?P<round>\\d+)\\s+(?:(?P<period>AM|PM)[\\s_]*)?(?P<mail_date>\\d{8})\\s*$",
+      "network_file_regex": "^(?P<file_date>\\d{6})_.*?_Document_Round(?P<round>\\d+)_(?P<doc_date>\\d{8})\\.zip(?:\\.(?:gpg|pgp))?$",
+      "excel_regex": ".+",
+      "require_exact_date_match": true,
+      "processor": "extracted_files",
+      "return_extracted_folder": true
+    }
+  },
+  "files": {
+    "network_folder": "\\\\10.0.0.243\\pgp-data$",
+    "archive_processed_files": true,
+    "processed_archive_folder": "\\\\10.0.0.243\\pgp-data$\\03 Check"
+  },
+  "forward_mail": {
+    "enabled": true,
+    "send_from": "datasupport@tradeconnection.co.th",
+    "recipients": [],
+    "cc_recipients": [],
+    "groups": [
+      "Q All"
+    ],
+    "cc_groups": [],
+    "workflow_recipients": {
+      "payment_online": {
+        "to": [
+          "Q All"
+        ],
+        "cc": []
+      },
+      "performance": {
+        "to": [
+          "Q All"
+        ],
+        "cc": []
+      },
+      "customer_documents": {
+        "to": [
+          "Document"
+        ],
+        "cc": [
+          "CC Data"
+        ]
+      }
+    },
+    "body_prefix": "Pornpeera BOT System.",
+    "attach_payment_output": true,
+    "zip_attachment": true,
+    "send_immediately": true,
+    "zip_password_required": true
+  },
+  "app": {
+    "poll_interval_seconds": 25
+  }
+}

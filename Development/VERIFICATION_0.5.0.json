@@ -1,0 +1,79 @@
+{
+  "version": "0.5.0",
+  "verified_at_utc": "2026-10-29T04:45:30.581Z",
+  "workflows": 5,
+  "unit_tests": {
+    "passed": 72,
+    "log": "Archive/tests_0.5.0.log"
+  },
+  "source_gui": {
+    "status": "verified",
+    "tasks": 5,
+    "pages": 3,
+    "profile_encrypted": true,
+    "sender_accounts_async": true,
+    "typed_sender_preserved_on_refresh_and_failure": true,
+    "status_panel_present": true,
+    "production_monitor_started": false,
+    "emails_sent": 0,
+    "database_writes": 0
+  },
+  "enforcement": {
+    "manual_review_required": false,
+    "automatic_flow_tested": true,
+    "payload": "Original PDFs plus table-only Excel in password ZIP",
+    "prior_unchanged_ocr_evidence": "Development/VERIFICATION_0.4.1.json"
+  },
+  "success_rate": {
+    "body_primary": true,
+    "office": "A1015/A1015L",
+    "input": "GPG/PGP to ZIP or RAR",
+    "rar_versions_tested": [
+      4,
+      5
+    ],
+    "nested_unicode_bytes_verified": true,
+    "password_zip_verified": true,
+    "own_recipients_verified": true,
+    "no_database": true
+  },
+  "mail_sender": {
+    "exact_unique_account_required": true,
+    "assignment_readback_tested": true,
+    "draft_display_save_readback_tested": true
+  },
+  "production_emails_sent": 0,
+  "production_database_writes": 0,
+  "source_commit": null,
+  "limitations": [
+    "Live delivery and execution on another physical Windows machine not exercised.",
+    "RAR inner encryption and multipart inputs stop before mail.",
+    "Git author name/email not configured; no commit created."
+  ],
+  "packaged_gui": {
+    "status": "verified",
+    "exit_code": 0,
+    "production_start_clicked": false,
+    "database_writes": 0,
+    "emails_sent": 0
+  },
+  "packaged_profile_upgrade": {
+    "status": "verified",
+    "exit_code": 0,
+    "production_start_clicked": false,
+    "database_writes": 0,
+    "emails_sent": 0,
+    "old_four_task_profile_loads": true,
+    "bundled_tool_paths_rebased": true,
+    "new_task_disabled": true
+  },
+  "packaged_runtime": {
+    "status": "verified",
+    "frozen_rar_and_monitor_modules": true,
+    "bundled_unrar_sha256": "672454e60763f06dbe80d122b4b17d389bfe2734a186d76ee05025a76d952a64",
+    "bundled_unrar_extracted_rar5": true,
+    "nested_unicode_bytes_match": true,
+    "production_emails_sent": 0,
+    "production_database_writes": 0
+  }
+}

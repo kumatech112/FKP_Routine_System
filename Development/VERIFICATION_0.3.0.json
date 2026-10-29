@@ -1,0 +1,41 @@
+{
+  "version": "0.3.0",
+  "verified_at_utc": "2026-10-29T02:36:37.029Z",
+  "changes": [
+    "Enforcement accepts decorated/near subjects and relevant Body content.",
+    "After extraction, a verified document-tree ZIP is sent to Enforcement-specific To/CC before OCR.",
+    "Delivery results survive OCR faults; completed/uncertain mail is never automatically replayed.",
+    "Reviewed Excel and sent ZIP are collected together; Draft preserves the source.",
+    "Saved managed PGP/OCR executable paths rebase to the running release; custom tools, key folders, recipients and protected secrets are preserved."
+  ],
+  "unit_tests": {
+    "passed": 50,
+    "log": "Archive/tests_0.3.0.log"
+  },
+  "source_gui": {
+    "status": "verified",
+    "tasks": 4,
+    "pages": 3,
+    "profile_encrypted": true,
+    "production_monitor_started": false,
+    "emails_sent": 0,
+    "database_writes": 0
+  },
+  "recipient_setup": "Owner selected configuration in Settings; Enforcement To/CC remains empty until entered by owner.",
+  "emails_sent": 0,
+  "database_writes": 0,
+  "limitations": [
+    "Delivery tests use a simulated Outlook adapter; no live email was sent.",
+    "Not verified on another physical Windows machine.",
+    "Git commit incomplete because author name/email are not configured."
+  ],
+  "source_commit": null,
+  "packaged_gui": {
+    "status": "verified",
+    "exit_code": 0,
+    "production_start_clicked": false,
+    "database_writes": 0,
+    "emails_sent": 0,
+    "old_profile_tool_paths_rebased": true
+  }
+}

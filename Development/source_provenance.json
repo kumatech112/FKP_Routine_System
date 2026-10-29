@@ -1,0 +1,79 @@
+{
+  "origin": "FKP_Performance 5.2.0",
+  "mode": "daily",
+  "files": [
+    {
+      "source": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Performance\\Program\\FKP_Performance_5.2.0_20261027_154328\\Templates\\Daily_Recovery_Performance.xls",
+      "target": "Templates/Daily_Recovery_Performance.xls",
+      "sha256": "2ba59a018675d3f3704e38f03d9a34aeca681c73082dacacb74a0fe8d0955d3c"
+    },
+    {
+      "source": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Performance\\Program\\FKP_Performance_5.2.0_20261027_154328\\Templates\\index Bucket.xls",
+      "target": "Templates/index Bucket.xls",
+      "sha256": "346c1b12eeaba0e3c8fa2a34fb9dddd4a55487b8de82b9e6274142fdb8d1c0ab"
+    },
+    {
+      "source": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Performance\\Development\\Rebuild\\fkp\\daily.py",
+      "target": "routine/vendor/fkp/daily.py",
+      "sha256": "2702f7fd97d63ac687c0f42b33cf3217aee1f3703340db4d94f14314d6d5ef6a",
+      "upstream_sha256": "71936a8fac84cbf5fc468d8b9355bb53cd75bb62be805aa00a3e96d70a676d64",
+      "adaptation": "Stage 05 metadata H:L uses text format before assigning Product/Bucket/ISO dates/month. Daily financial/filter logic unchanged."
+    },
+    {
+      "source": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Performance\\Development\\Rebuild\\fkp\\domain.py",
+      "target": "routine/vendor/fkp/domain.py",
+      "sha256": "87119c140cb54e0213ea1c0f9eaf4fde4c1bae9e2a9ce46f5f76ec9c377e61ad"
+    },
+    {
+      "source": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Performance\\Development\\Rebuild\\fkp\\workbook.py",
+      "target": "routine/vendor/fkp/workbook.py",
+      "sha256": "8129222b4dd8c1ef42c05934c30effb1679455297d3e2f3369d1a36224036f78"
+    },
+    {
+      "source": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Performance\\Development\\Rebuild\\fkp\\extract.py",
+      "target": "routine/vendor/fkp/extract.py",
+      "sha256": "5e674bc9bc6528ad1779f9a29a9fd16b4ae5053599e32e406226efe7a36c5d5d"
+    },
+    {
+      "source": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Performance\\Development\\Rebuild\\fkp\\database.py",
+      "target": "routine/vendor/fkp/database.py",
+      "sha256": "e37d2449a7eff12d931c0b896f75a1c68b8be7929859b37ef7dc77d72429c315"
+    },
+    {
+      "source": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Performance\\Development\\Rebuild\\fkp\\office.py",
+      "target": "routine/vendor/fkp/office.py",
+      "sha256": "1c7306018eef88c9f1bf2ac8330bd82b0097b24bdd5c9453778bcbd14e740a5d"
+    },
+    {
+      "source": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Performance\\Development\\Rebuild\\fkp\\source_safety.py",
+      "target": "routine/vendor/fkp/source_safety.py",
+      "sha256": "073c880b7a5dc982de859a2f01c78b65670e1e8f7e4e6f301a28787dd95c3081"
+    },
+    {
+      "source": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Performance\\Development\\Rebuild\\fkp\\persistence.py",
+      "target": "routine/vendor/fkp/persistence.py",
+      "sha256": "bdedce2b9df66586e55394d31339e2fce81783f35279afc604713a7ee9f726a7"
+    }
+  ],
+  "send_from_reference": {
+    "source": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Frequency\\Development\\Source\\frequency_bot_app.py",
+    "functions": [
+      "_build_query_mail_page",
+      "_load_sender_accounts_clicked"
+    ],
+    "scope": "Send From editable SMTP combobox, explicit choose-account action, async refresh preserving typed text only; other Frequency behavior is not copied."
+  },
+  "flexible_trigger_policy": {
+    "version": "0.6.0",
+    "source": "routine/triggers.py",
+    "scope": "All five known workflows; read/unread within saved window, Body/attachment/Subject names and fuzzy work keywords; exact identity and durable dedupe remain enforced."
+  },
+  "payment_presentation": {
+    "version": "0.6.1",
+    "scope": "Query worksheet is hidden while Table1 remains active; Query data/mapping preserved; generated filenames and outgoing ZIP stem omit _processed."
+  },
+  "enforcement_precision": {
+    "version": "0.6.2",
+    "scope": "Native Thai TXT spacing; colored-header and aspect processing; numeric fields; direct hidden Tesseract calls; PDF Outlook timestamp final column with multi-view time consensus; PDF paths without artificial Input folders; collision-safe naming."
+  }
+}

@@ -1,0 +1,1 @@
+Unmodified UnRAR.exe 5.11 from C:\Program Files\WinRAR. Separately redistributable component, see bundled License.txt section 3a. Used only to read compressed RAR members to stdout through rarfile 4.2; never used to create RAR. No WinRAR registration files or private settings are included.

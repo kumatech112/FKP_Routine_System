@@ -1,0 +1,44 @@
+{
+  "version": "0.2.1",
+  "checked_at_utc": "2026-10-29T01:41:21.404Z",
+  "change": "Reuse local PGP settings without password re-entry; empty passphrase uses normal key-store/agent handling.",
+  "unit_tests": {
+    "passed": 36,
+    "log": "Archive/tests_0.2.1.log"
+  },
+  "legacy_decryption": {
+    "verified": true,
+    "reentered_password": false,
+    "existing_local_settings_loaded": true,
+    "source_preserved": true,
+    "extracted_files": 1,
+    "plaintext_secrets_saved": false,
+    "emails_sent": 0,
+    "database_writes": 0
+  },
+  "source_ui": {
+    "status": "verified",
+    "tasks": 4,
+    "pages": 3,
+    "profile_encrypted": true,
+    "production_monitor_started": false,
+    "emails_sent": 0,
+    "database_writes": 0
+  },
+  "limitations": [
+    "Not verified on another physical Windows machine.",
+    "No production email sent or production database writes.",
+    "A different Windows user needs its own authorized private key/settings.",
+    "Git commit incomplete: author name/email are not configured."
+  ],
+  "source_commit": null,
+  "checks": {
+    "packaged_ui": {
+      "status": "verified",
+      "exit_code": 0,
+      "production_start_clicked": false,
+      "database_writes": 0,
+      "emails_sent": 0
+    }
+  }
+}

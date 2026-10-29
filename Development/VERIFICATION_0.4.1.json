@@ -1,0 +1,126 @@
+{
+  "version": "0.4.1",
+  "verified_at_utc": "2026-10-29T03:42:46.425Z",
+  "workflows": 4,
+  "unit_tests": {
+    "passed": 56,
+    "log": "Archive/tests_0.4.1.log"
+  },
+  "sample_ocr": {
+    "task": "enforcement",
+    "verified": true,
+    "database_writes": 0,
+    "emails_sent": 0,
+    "pages": 6,
+    "cells": 201,
+    "status": "needs_review"
+  },
+  "sample_tables": [
+    {
+      "columns": 18,
+      "rows": 1
+    },
+    {
+      "columns": 20,
+      "rows": 2
+    },
+    {
+      "columns": 20,
+      "rows": 3
+    },
+    {
+      "columns": 21,
+      "rows": 3
+    }
+  ],
+  "export": "Table worksheets only; no mail text, signatures, full-page text or audit sheets.",
+  "zip_payload": {
+    "verified": true,
+    "pdf_count": 4,
+    "excel_count": 1,
+    "password_protected": true,
+    "all_bytes_match": true,
+    "human_review_performed": false,
+    "emails_sent": 0,
+    "database_writes": 0
+  },
+  "source_gui": {
+    "status": "verified",
+    "tasks": 4,
+    "pages": 3,
+    "profile_encrypted": true,
+    "production_monitor_started": false,
+    "emails_sent": 0,
+    "database_writes": 0
+  },
+  "delivery_checkpoint": "After all table cells and headers are explicitly reviewed; ZIP includes all PDFs and table-only Excel.",
+  "emails_sent": 0,
+  "database_writes": 0,
+  "source_commit": null,
+  "limitations": [
+    "OCR transcription still requires human review.",
+    "Live email delivery and another physical Windows machine were not exercised.",
+    "Git commit incomplete: author name and email are not configured."
+  ],
+  "frozen_table_export": {
+    "verified": true,
+    "tables": [
+      [
+        18,
+        1
+      ],
+      [
+        20,
+        2
+      ],
+      [
+        20,
+        3
+      ],
+      [
+        21,
+        3
+      ]
+    ],
+    "outside_table_sheets": false
+  },
+  "header_qa": {
+    "verified": true,
+    "version": "0.4.1",
+    "header_cells_reprocessed": 79,
+    "table_cells_preserved": 201,
+    "review_required": true,
+    "emails_sent": 0
+  },
+  "frozen_geometry_baseline": {
+    "version": "0.4.0",
+    "task": "enforcement",
+    "verified": true,
+    "database_writes": 0,
+    "emails_sent": 0,
+    "pages": 6,
+    "cells": 201,
+    "status": "needs_review"
+  },
+  "packaged_gui": {
+    "status": "verified",
+    "exit_code": 0,
+    "production_start_clicked": false,
+    "database_writes": 0,
+    "emails_sent": 0,
+    "old_profile_tool_paths_rebased": true
+  },
+  "frozen_header_qa": {
+    "task": "enforcement",
+    "verified": true,
+    "database_writes": 0,
+    "emails_sent": 0,
+    "pages": 1,
+    "cells": 18,
+    "status": "needs_review",
+    "colored_header_verified": true,
+    "table_only": true,
+    "columns": 18,
+    "rows": 1
+  }
+}

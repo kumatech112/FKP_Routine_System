@@ -1,0 +1,53 @@
+{
+  "version": "0.1.0",
+  "workflow": "Performance Daily only",
+  "unit_tests": 20,
+  "daily_integration": {
+    "verified": true,
+    "products": 9,
+    "records": 1204,
+    "stage02_for_mail": true,
+    "stage05_readback_matches_engine": true,
+    "source_preserved": true
+  },
+  "gpg": {
+    "verified": true,
+    "version": "2.0.22",
+    "archive_source_unchanged": true
+  },
+  "native_ui": {
+    "verified": true,
+    "pages": 3,
+    "sizes": [
+      "1180x780",
+      "1000x650"
+    ],
+    "search_sort_selection": true,
+    "settings_persistence": true,
+    "no_automatic_start": true
+  },
+  "database": {
+    "access_readonly_open": true,
+    "link": "dbo_PFM_DAILY",
+    "sql_schema_verified": true,
+    "production_writes": 0,
+    "field_count": 11,
+    "runtime_environment": "Missing Windows process variables restored from native known-folder APIs; no persistent/system changes"
+  },
+  "mail": {
+    "production_messages_sent": 0,
+    "simulated_boundary_tests": true
+  },
+  "adaptation": "Text number format for saved stage05 H:L metadata; financial/filter/rank logic unchanged.",
+  "packaged": {
+    "daily_generation_verified": true,
+    "records": 1204,
+    "idle_gui_open_close_verified": true,
+    "production_start_clicked": false
+  },
+  "git": {
+    "initialized": true,
+    "commit": null,
+    "status": "incomplete: author name/email not configured"
+  }
+}
