@@ -1,0 +1,43 @@
+{
+  "version": "0.6.6",
+  "status": "verified",
+  "unit_tests_passed": 126,
+  "unit_test_log": "Archive/tests_0.6.6.log",
+  "smb_tests": {
+    "status": "verified",
+    "smb_share_tests_passed": 9,
+    "real_windows_handle_exclusion": true,
+    "process_crash_releases_smb_lock": true,
+    "legacy_recovery_requires_confirmation_and_backup": true,
+    "production_emails_sent": 0,
+    "production_database_writes": 0,
+    "production_locks_modified": false
+  },
+  "native_maintenance_ui": {
+    "status": "verified",
+    "native_lock_button_works": true,
+    "cancel_preserves_lock": true,
+    "confirmed_action_backs_up_and_removes_only_private_legacy_lock": true,
+    "main_thread_responsive": true,
+    "production_start_clicked": false,
+    "production_emails_sent": 0,
+    "production_database_writes": 0,
+    "production_locks_modified": false
+  },
+  "readonly_diagnosis": {
+    "legacy_lock_started": "2026-10-29T18:22:06.221949+07:00",
+    "legacy_pid": 18360,
+    "legacy_pid_absent_on_inspected_machine": true,
+    "legacy_host_unknown": true,
+    "no_document_state_or_job_created": true,
+    "current_document_sources_in_input": 0,
+    "matches_found": 4,
+    "archived_round1_29102026": true,
+    "round2_29102026_missing": true,
+    "round1_30102026_missing": true
+  },
+  "production_profile_modified": false,
+  "production_locks_modified": false,
+  "production_emails_sent": 0,
+  "production_database_writes": 0
+}

@@ -1,4 +1,4 @@
-# FKP Routine System 0.6.5
+# FKP Routine System 0.6.6
 
 A native Windows application for Payment Online, Performance Daily, Customer Documents, Enforcement and Performance Success Rate. The owner-provided robot icon is used by the executable, window and project shortcut.
 
@@ -23,6 +23,8 @@ Saving settings does not require every selected task to have complete recipients
 Performance Success Rate is separate from Performance Daily. It reads Body filenames such as A10XX_Performance_SAM_OA_Oct26.zip.gpg, maps XX to office 15, and accepts A1015/A1015L with optional transport-date prefixes. The source folder is \\10.0.0.243\pgp-data$. Received date distinguishes repeated monthly deliveries. After PGP decryption, ZIP or RAR content is detected and extracted, preserving nested names and all file bytes, then repacked into an AES-256 password ZIP in a separate Delivery folder so the outgoing ZIP never collides with the decrypted input ZIP. Its own To/CC fields start blank; the new task starts disabled until configured and selected. It performs no OCR, Daily stages or database writes. Corrupt, ambiguous, encrypted-inner or multipart RAR inputs stop before mail.
 
 The main Status panel shows actual scan events, last successful scan time, matching mail count, mailbox/folder, next poll countdown and bounded live logs. Unknown counts remain blank until a scan finishes. Send From alone follows FKP Frequency: an editable SMTP selector with an explicit เลือกบัญชี action; asynchronous refresh preserves typed text. Sending requires exactly one matching Outlook account and readback. Draft display/save must retain that account.
+
+Version 0.6.6 holds shared leases through Windows handles with delete-on-close, so process termination releases the lock on SMB. Existing legacy lock markers retain their owner metadata and block work until explicitly backed up and recovered after the user confirms this task is stopped on all machines. Active handle leases cannot be removed by that maintenance action. Missing-source/trigger/previous-failure reasons remain visible through the poll countdown and Stop. Pre-job errors are retained in each task's Logs/last_scan_issue.json. Document preparation reports decryption, ZIP, recipient checks and mail stages; failed ledgers retain the exact stage and a redacted error. Existing archive and delivery deduplication remains enforced.
 
 ## Deployment and rights
 

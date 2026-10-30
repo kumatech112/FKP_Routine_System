@@ -177,19 +177,9 @@ def validate_settings(settings):
 
 @contextmanager
 def lease(folder, name):
-    path = Path(folder) / (name + ".lock")
-    path.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        handle = path.open("x", encoding="utf-8")
-    except FileExistsError as error:
-        raise ValidationError("มีงานกำลังใช้ฐานข้อมูล กรุณาตรวจสอบบันทึกงาน") from error
-    try:
-        with handle:
-            json.dump({"pid": os.getpid(), "started": now().isoformat()}, handle)
-            handle.flush()
+    from ...locking import lease as resource_lease
+    with resource_lease(folder, name):
         yield
-    finally:
-        path.unlink()
 
 
 class Job:

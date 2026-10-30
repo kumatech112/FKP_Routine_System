@@ -12,9 +12,9 @@ def missing_source_note(runtime,match,task,name=''):
         if requested:
             wanted={logical_name(n) for n in requested}
             if any(p.is_file() and logical_name(p.name) in wanted for p in archive.iterdir()):
-                return 'พบไฟล์ใน 03 Check แล้ว จึงไม่ส่งซ้ำจากโฟลเดอร์เก็บงาน'
+                return 'พบไฟล์ใน 03 Check แล้ว จึงไม่ส่งซ้ำจากโฟลเดอร์เก็บงาน'+(': '+name if name else '')
         elif task in ('customer_documents','enforcement'):
             try:
                 if infer_sources(archive,match,task):return 'พบไฟล์ใน 03 Check แล้ว จึงไม่ส่งซ้ำจากโฟลเดอร์เก็บงาน'
             except Exception:pass
-    return 'รอไฟล์ที่ตรงเมลใน '+str(source)
+    return 'รอไฟล์ '+(name if name and name!='รอชื่อไฟล์หรือไฟล์ที่ตรงเมล' else 'ที่ตรงเมล')+' ใน '+str(source)

@@ -31,6 +31,8 @@ class Application(BaseApplication):
                     widget.configure(text="งานประจำ")
         bar = self.start_button.master
         ttk.Button(bar, text="ตรวจความพร้อม", command=self.check_ready).pack(side="left", padx=(18, 0))
+        self.lock_button=ttk.Button(bar,text="ปลดล็อกเก่า",command=self.recover_old_lock)
+        self.lock_button.pack(side="left",padx=6)
         ttk.Button(bar, text="ส่งงาน OCR ที่ค้าง", command=self.open_review).pack(side="left", padx=6)
 
     def table(self,parent,columns,headings):
@@ -285,6 +287,8 @@ class Application(BaseApplication):
 
     def busy(self, value):
         super().busy(value)
+        if hasattr(self,"lock_button"):
+            self.lock_button.configure(state="disabled" if value else "normal")
         for control in self.task_controls:
             control.configure(state="disabled" if value else "normal")
 
@@ -313,6 +317,31 @@ class Application(BaseApplication):
             finally:
                 self.events.put({"kind": "stopped"})
         self.worker = threading.Thread(target=work, daemon=False)
+        self.worker.start()
+
+    def recover_old_lock(self):
+        if self.worker and self.worker.is_alive():
+            self.status.set("หยุดงานก่อนปลดล็อกเก่า")
+            return
+        selected=self.monitor_tree.selection()
+        task=selected[0] if selected and selected[0] in TASKS else 'customer_documents'
+        folder=Path(task_config(self.config_values,task)['logs'])/'Logs/Locks'
+        name='performance' if task=='performance' else 'workflow'
+        prompt=(TASKS[task]+'\n'+str(folder/(name+'.lock'))+
+                '\n\nหยุดงานประเภทนี้บนทุกเครื่องแล้วใช่ไหม?\nระบบจะสำรองและปลดเฉพาะล็อกรุ่นเก่า โดยไม่ส่งเมลหรือเปลี่ยนประวัติงาน')
+        if not messagebox.askyesno('ปลดล็อกเก่า',prompt):
+            return
+        self.busy(True)
+        def work():
+            try:
+                from .locking import recover_legacy_lock
+                backup=recover_legacy_lock(folder,name,confirmed=True)
+                message='สำรองและปลดล็อกเก่าแล้ว กดเริ่มเพื่อตรวจเมล | '+str(backup)
+            except Exception as error:
+                message=str(error) if isinstance(error,ValidationError) else 'ปลดล็อกเก่าไม่สำเร็จ ('+type(error).__name__+')'
+            self.events.put({'kind':'status','task':task,'step':message})
+            self.events.put({'kind':'stopped'})
+        self.worker=threading.Thread(target=work,daemon=False)
         self.worker.start()
 
     def check_ready(self):

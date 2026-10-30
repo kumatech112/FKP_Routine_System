@@ -37,12 +37,12 @@ class FileWorkflowService(PerformanceService):
             if self.stop is not None and self.stop.is_set():
                 break
             if reference.match.get('trigger_error'):
-                self.notify({'kind':'status','step':TASKS[self.task]+': '+reference.match['trigger_error']})
+                self.notify({'kind':'status','attention':True,'step':TASKS[self.task]+': '+reference.match['trigger_error']})
                 continue
             try:
                 candidates=self.candidates(reference,runtime,outlook)
             except (OSError,ValidationError) as error:
-                self.notify({'kind':'status','step':TASKS[self.task]+': '+str(error)})
+                self.notify({'kind':'status','attention':True,'step':TASKS[self.task]+': '+str(error)})
                 continue
             if self.task == "enforcement":
                 if not candidates:
@@ -69,10 +69,15 @@ class FileWorkflowService(PerformanceService):
             for source, logical_name in candidates:
                 if source is None:
                     from .intake_status import missing_source_note
-                    self.notify({"kind":"status","step":TASKS[self.task]+": "+missing_source_note(runtime,reference.match,self.task,logical_name)})
+                    self.notify({"kind":"status","attention":True,"step":TASKS[self.task]+": "+missing_source_note(runtime,reference.match,self.task,logical_name)})
                     continue
                 unit_key = hashlib.sha256((mail_key(reference)+"\0"+logical_name.casefold()).encode()).hexdigest()
                 if unit_key in self.ledger.data["mails"]:
+                    old_key=self.ledger.data["mails"][unit_key].get("file")
+                    old=self.ledger.data["files"].get(old_key,{})
+                    if old.get("status") in ("failed","cancelled","processing"):
+                        detail=old.get("last_error") or "มีงานเดิมค้าง ต้องตรวจบันทึกก่อนเริ่มซ้ำ"
+                        self.notify({"kind":"status","attention":True,"step":TASKS[self.task]+": "+logical_name+": "+detail+" | "+str(old.get("job",""))})
                     continue
                 receipt = self.process_unit(reference, source, runtime, outlook, unit_key)
                 if receipt:
@@ -139,6 +144,7 @@ class FileWorkflowService(PerformanceService):
         }
         self.ledger.update(unit_key, fingerprint)
         forwarded = None
+        stage="เตรียมงาน"
         try:
             if self.task == "payment_online":
                 workbook = unpack_archive(source, job, runtime["decrypt"], runtime["scan"]["excel_regex"])
@@ -160,16 +166,25 @@ class FileWorkflowService(PerformanceService):
             elif self.task in ("customer_documents","performance_success_rate"):
                 if self.task=="performance_success_rate" and (not runtime["mail"].get("zip_attachment") or not runtime["mail"].get("zip_password")):
                     raise ValidationError("Success Rate ต้อง ZIP ใส่รหัสก่อนส่ง")
+                stage="ถอด PGP และแตกไฟล์"
+                self.ledger.update(unit_key,fingerprint,stage=stage)
+                job.progress(10,stage+": "+Path(source).name)
                 extracted = extract_payload(source, job, runtime["decrypt"])
                 result_files = sorted(p for p in extracted.rglob("*") if p.is_file())
                 if not result_files:
                     raise ValidationError("ไฟล์ที่แตกแล้วไม่มีเอกสาร")
+                stage="สร้าง ZIP"
+                self.ledger.update(unit_key,fingerprint,stage=stage)
+                job.progress(55,f"แตกไฟล์แล้ว {len(result_files)} ไฟล์ กำลังสร้าง ZIP")
                 from types import SimpleNamespace
                 delivery=job.folder/"Delivery"
                 delivery.mkdir()
                 attachment = package_files(result_files, runtime["mail"], SimpleNamespace(folder=delivery), re.sub(r"\.(?:zip|rar)(?:\.(?:gpg|pgp))?$", "", Path(source).name, flags=re.I),
                                            relative_root=extracted)
                 attachment_hash = digest(attachment)
+                stage="ตรวจบัญชีผู้ส่งและผู้รับ"
+                self.ledger.update(unit_key,fingerprint,stage=stage)
+                job.progress(75,"สร้าง ZIP แล้ว กำลังตรวจบัญชีผู้ส่งและผู้รับ")
                 forwarded = outlook.prepare_forward(reference, attachment, runtime["mail"])
                 rows = len(result_files)
             if digest(source) != fingerprint:
@@ -177,7 +192,9 @@ class FileWorkflowService(PerformanceService):
             job.check()
             if digest(attachment) != attachment_hash:
                 raise ValidationError("ไฟล์แนบเปลี่ยนก่อนส่งเมล")
-            self.ledger.update(unit_key, fingerprint, mail="pending")
+            stage="ส่งเมล"
+            job.progress(85,"กำลังส่งเมลพร้อมไฟล์แนบ")
+            self.ledger.update(unit_key, fingerprint, mail="pending",stage=stage)
             outcome = outlook.deliver(forwarded, runtime["mail"])
             forwarded = None
             if outcome not in ("sent", "draft_opened"):
@@ -207,9 +224,13 @@ class FileWorkflowService(PerformanceService):
             if state["mail"] == "pending":
                 state["mail"] = "unknown"
             status = "cancelled" if isinstance(error, Cancelled) else "failed"
-            self.ledger.update(unit_key, fingerprint, status=status)
+            detail = str(error) if isinstance(error, (ValidationError, Cancelled)) else "ทำงานไม่สำเร็จ ("+type(error).__name__+") กรุณาตรวจบันทึกงาน"
+            detail=stage+": "+detail
+            for section,field in (("decrypt","passphrase"),("decrypt","archive_password"),("mail","zip_password")):
+                secret=str(runtime.get(section,{}).get(field,""))
+                if secret:detail=detail.replace(secret,"<redacted>")
+            self.ledger.update(unit_key,fingerprint,status=status,stage=stage,last_error=detail)
             job.log(safe_trace(error, runtime))
-            detail = str(error) if isinstance(error, (ValidationError, Cancelled)) else "ทำงานไม่สำเร็จ กรุณาตรวจบันทึกงาน"
             receipt = job.finish(TASKS[self.task], status, detail, dict(state))
         finally:
             if forwarded is not None:
@@ -223,7 +244,14 @@ class FileWorkflowService(PerformanceService):
 
 def run(values, stop, notify=None, once=False):
     validate(values)
-    notify = notify or (lambda event: None)
+    listener = notify or (lambda event: None)
+    def notify(event):
+        task=event.get("task")
+        if task in TASKS and (event.get("attention") or (event.get("kind")=="scan" and event.get("phase")=="error")):
+            from .monitoring import record_scan_issue
+            try:record_scan_issue(task_config(values,task),event)
+            except OSError:pass
+        listener(event)
     selected = [key for key in TASKS if values["workflows"][key].get("enabled", False)]
     if not selected:
         raise ValidationError("เลือกงานอย่างน้อยหนึ่งประเภท")

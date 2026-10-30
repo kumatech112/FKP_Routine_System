@@ -52,7 +52,9 @@
     {
       "source": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Performance\\Development\\Rebuild\\fkp\\persistence.py",
       "target": "routine/vendor/fkp/persistence.py",
-      "sha256": "bdedce2b9df66586e55394d31339e2fce81783f35279afc604713a7ee9f726a7"
+      "sha256": "1ca5473fbc8e848166a341f639f2298a24c878522ec669628739f5440579cfd4",
+      "upstream_sha256": "bdedce2b9df66586e55394d31339e2fce81783f35279afc604713a7ee9f726a7",
+      "adaptation": "Shared lease delegates to Windows handle-backed routine.locking; state/source/publication behavior retained."
     }
   ],
   "send_from_reference": {
@@ -92,5 +94,9 @@
   "daily_routing": {
     "version": "0.6.5",
     "scope": "Owner correction: mail attaches stage 01 only (plain XLSX or single-member password ZIP); stage 05 remains the verified Daily database input. Stages 01–05 and all financial/filter/rank logic retained. No automatic replay of previous jobs."
+  },
+  "document_observability": {
+    "version": "0.6.6",
+    "scope": "OS-held SMB leases released on crash; explicit backed-up legacy lock recovery after all workers stopped; persistent pre-job scan issue; wait/error reasons retained; source names and decryption/ZIP/recipient/mail stages visible. No archive replay or retry of attempted deliveries."
   }
 }
