@@ -142,7 +142,7 @@ class Application(tk.Tk):
         try:
             mail = load_legacy(self.config_values)["mail"]
             mode = "ส่งทันที" if mail.get("send_immediately", True) else "เปิด Draft"
-            self.mail_summary.set(f"ผู้ส่ง: {mail['send_from']}\nTo: {'; '.join(mail['to'])}   CC: {'; '.join(mail['cc'])}\n{mode}   แนบขั้น 02" + (" (ZIP)" if mail.get("zip_attachment") else ""))
+            self.mail_summary.set(f"ผู้ส่ง: {mail['send_from']}\nTo: {'; '.join(mail['to'])}   CC: {'; '.join(mail['cc'])}\n{mode}   Performance Daily แนบขั้น 01" + (" (ZIP)" if mail.get("zip_attachment") else ""))
         except Exception:
             self.mail_summary.set("ยังอ่านการตั้งค่าเมลเดิมไม่ได้")
 

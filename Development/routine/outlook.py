@@ -83,7 +83,7 @@ class Outlook:
         if not settings.get("to") or not str(settings.get("send_from", "")).strip():
             raise ValidationError("ระบุผู้รับและบัญชีผู้ส่งก่อนส่งงาน")
         if not attachment.is_file():
-            raise ValidationError("ไม่พบไฟล์แนบขั้น 02")
+            raise ValidationError("ไม่พบไฟล์แนบ")
         sender = str(settings["send_from"]).strip()
         matches = [a for a in self.session.Accounts
                    if str(a.SmtpAddress or "").strip().casefold()==sender.casefold()]
@@ -104,7 +104,7 @@ class Outlook:
                 forwarded.Attachments.Remove(1)
             forwarded.Attachments.Add(str(attachment.resolve()))
             if forwarded.Attachments.Count != 1:
-                raise ValidationError("ไฟล์แนบเมลขั้น 02 ไม่ครบ")
+                raise ValidationError("ไฟล์แนบเมลไม่ครบ")
             prefix = str(settings.get("body_prefix", ""))
             if prefix:
                 forwarded.HTMLBody = "<p>" + escape(prefix).replace("\n", "<br>") + "</p>" + forwarded.HTMLBody

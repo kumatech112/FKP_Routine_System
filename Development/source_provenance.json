@@ -88,5 +88,9 @@
       "ยอดชำระล่าสุด"
     ],
     "scope": "Append exact-name Query2 text fields as columns T/U after FORECAST; preserve NULL/zero and existing input, joins and Actions; block missing fields."
+  },
+  "daily_routing": {
+    "version": "0.6.5",
+    "scope": "Owner correction: mail attaches stage 01 only (plain XLSX or single-member password ZIP); stage 05 remains the verified Daily database input. Stages 01–05 and all financial/filter/rank logic retained. No automatic replay of previous jobs."
   }
 }

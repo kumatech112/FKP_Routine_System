@@ -1,4 +1,4 @@
-"""Daily-only adapter. Mail consumes 02; SQL consumes the verified saved 05."""
+"""Daily-only adapter. Mail consumes 01; SQL consumes the verified saved 05."""
 from dataclasses import dataclass
 from pathlib import Path
 import re
@@ -21,7 +21,7 @@ class DailyArtifacts:
 
     def verify(self):
         if digest(self.mail_file) != self.mail_hash or digest(self.database_file) != self.database_hash:
-            raise ValidationError("ไฟล์ขั้น 02 หรือ 05 เปลี่ยนหลังตรวจสอบ")
+            raise ValidationError("ไฟล์ขั้น 01 หรือ 05 เปลี่ยนหลังตรวจสอบ")
 
 
 def records_from_05(path, products=DAILY_PRODUCTS):
@@ -63,20 +63,20 @@ def records_from_05(path, products=DAILY_PRODUCTS):
 
 def process_daily(source, settings, job):
     expected, outputs = run_daily(source, "daily", list(DAILY_PRODUCTS), settings, job)
-    stage02 = job.folder / ("02_" + Path(source).stem + ".xlsx")
+    stage01 = job.folder / ("01_" + Path(source).stem + ".xlsx")
     stage05 = job.folder / ("05_" + Path(source).stem + ".xlsx")
-    if outputs != [str(stage05)] or not stage02.is_file() or not stage05.is_file():
-        raise ValidationError("ผลลัพธ์ Daily ขั้น 02/05 ไม่ครบ")
+    if outputs != [str(stage05)] or not stage01.is_file() or not stage05.is_file():
+        raise ValidationError("ผลลัพธ์ Daily ขั้น 01/05 ไม่ครบ")
     before = digest(stage05)
     records = records_from_05(stage05)
     left = {r.identity: r for r in validate_details(expected)}
     right = {r.identity: r for r in records}
     if left != right or digest(stage05) != before:
         raise ValidationError("ข้อมูลที่อ่านจากขั้น 05 ไม่ตรงกับผลประมวลผล Daily")
-    result = DailyArtifacts(stage02, stage05, records, digest(stage02), before)
+    result = DailyArtifacts(stage01, stage05, records, digest(stage01), before)
     dump(job.evidence / "daily_routing.json", {
-        "mode": "daily", "mail_stage": "02", "database_stage": "05",
-        "mail_file": str(stage02), "database_file": str(stage05),
+        "mode": "daily", "mail_stage": "01", "database_stage": "05",
+        "mail_file": str(stage01), "database_file": str(stage05),
         "mail_sha256": result.mail_hash, "database_sha256": result.database_hash,
         "records": len(records),
     })

@@ -161,25 +161,25 @@ def extract_zip(source, folder, password=None):
                     raise ValidationError("แตก ZIP ต้นทางไม่สำเร็จ ตรวจรหัส ZIP หรือความสมบูรณ์ของไฟล์") from error
 
 
-def make_attachment(stage02, mail, job):
-    stage02 = Path(stage02)
-    if not stage02.is_file() or not stage02.name.startswith("02_"):
-        raise ValidationError("แนบเมลได้เฉพาะผลลัพธ์ขั้น 02")
+def make_attachment(stage01, mail, job):
+    stage01 = Path(stage01)
+    if not stage01.is_file() or not stage01.name.startswith("01_"):
+        raise ValidationError("แนบเมลได้เฉพาะผลลัพธ์ขั้น 01")
     if not mail.get("zip_attachment", True):
-        return stage02
+        return stage01
     import pyzipper
-    path = job.folder / (stage02.stem + ".zip")
+    path = job.folder / (stage01.stem + ".zip")
     password = str(mail.get("zip_password", ""))
     with pyzipper.AESZipFile(path, "x", compression=pyzipper.ZIP_DEFLATED) as archive:
         if password:
             archive.setpassword(password.encode("utf-8"))
             archive.setencryption(pyzipper.WZ_AES, nbits=256)
-        archive.write(stage02, arcname=stage02.name)
+        archive.write(stage01, arcname=stage01.name)
     with pyzipper.AESZipFile(path) as archive:
         if password:
             archive.setpassword(password.encode("utf-8"))
-        if archive.namelist() != [stage02.name] or archive.read(stage02.name) != stage02.read_bytes():
-            raise ValidationError("ตรวจ ZIP ขั้น 02 ไม่ผ่าน")
+        if archive.namelist() != [stage01.name] or archive.read(stage01.name) != stage01.read_bytes():
+            raise ValidationError("ตรวจ ZIP ขั้น 01 ไม่ผ่าน")
     return path
 
 

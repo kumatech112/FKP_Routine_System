@@ -90,8 +90,8 @@ class FlowTests(unittest.TestCase):
         self.temp.cleanup()
 
     def artifacts(self, source, settings, job):
-        a, b = job.folder / "02_source_Oct26.xlsx", job.folder / "05_source_Oct26.xlsx"
-        a.write_bytes(b"stage02")
+        a, b = job.folder / "01_source_Oct26.xlsx", job.folder / "05_source_Oct26.xlsx"
+        a.write_bytes(b"stage01")
         b.write_bytes(b"stage05")
         return DailyArtifacts(a, b, (record(),), digest(a), digest(b))
 
@@ -101,7 +101,7 @@ class FlowTests(unittest.TestCase):
         class FakeOutlook:
             def prepare_forward(self, reference, attachment, settings):
                 events.append(("prepared", attachment.name))
-                test.assertTrue(attachment.name.startswith("02_"))
+                test.assertTrue(attachment.name.startswith("01_"))
                 return SimpleNamespace(Close=lambda _: None)
 
             def deliver(self, forwarded, settings):
@@ -129,7 +129,7 @@ class FlowTests(unittest.TestCase):
             outlook=FakeOutlook(), database_factory=database_factory, processor=self.artifacts)
         return service, backend, events
 
-    def test_only_daily_routes_02_mail_and_05_database_and_deduplicates_restart(self):
+    def test_only_daily_routes_01_mail_and_05_database_and_deduplicates_restart(self):
         service, backend, events = self.service()
         result = service.process_message(self.reference, self.source, self.legacy, service.outlook)
         self.assertEqual(result["status"], "success")
@@ -138,7 +138,9 @@ class FlowTests(unittest.TestCase):
         self.assertTrue(all("PFM_ADJUST" not in s for s in backend.statements))
         self.assertEqual([e[0] for e in events], ["prepared", "database", "mail", "complete"])
         outputs = [Path(p).name for p in result["result"]["outputs"]]
-        self.assertEqual(set(outputs), {"02_source_Oct26.xlsx", "05_source_Oct26.xlsx"})
+        self.assertEqual(set(outputs), {"01_source_Oct26.xlsx", "05_source_Oct26.xlsx"})
+        self.assertEqual(result["result"]["mail_stage"], "01")
+        self.assertEqual(result["result"]["database_stage"], "05")
         restarted, backend2, events2 = self.service()
         duplicate = replace(self.reference, entry_id="forwarded_duplicate")
         self.assertIsNone(restarted.process_message(duplicate, self.source, self.legacy, restarted.outlook))
@@ -223,18 +225,48 @@ class FlowTests(unittest.TestCase):
         self.assertFalse(any(s.startswith("DELETE") for s in backend.statements))
         self.assertFalse(any(e[0] == "mail" for e in events))
 
-    def test_encrypted_attachment_contains_only_02(self):
+    def test_encrypted_attachment_contains_only_01(self):
         self.legacy["mail"].update(zip_attachment=True, zip_password="test-only-password")
-        stage02 = self.job.folder / "02_Daily_Oct26.xlsx"
-        stage02.write_bytes(b"fixture stage02")
-        path = make_attachment(stage02, self.legacy["mail"], self.job)
+        stage01 = self.job.folder / "01_Daily_Oct26.xlsx"
+        stage01.write_bytes(b"fixture stage01")
+        path = make_attachment(stage01, self.legacy["mail"], self.job)
         import pyzipper
         with pyzipper.AESZipFile(path) as archive:
-            self.assertEqual(archive.namelist(), [stage02.name])
+            self.assertEqual(archive.namelist(), [stage01.name])
             with self.assertRaises(RuntimeError):
-                archive.read(stage02.name)
+                archive.read(stage01.name)
             archive.setpassword(b"test-only-password")
-            self.assertEqual(archive.read(stage02.name), b"fixture stage02")
+            self.assertEqual(archive.read(stage01.name), b"fixture stage01")
+
+    def test_other_stages_cannot_be_attached_even_when_stage01_is_missing(self):
+        for stage in ('02','05'):
+            for zipped in (False,True):
+                with self.subTest(stage=stage,zipped=zipped):
+                    path=self.job.folder/(stage+'_Daily_Oct26.xlsx')
+                    path.write_bytes(b'not the mail stage')
+                    with self.assertRaisesRegex(ValidationError,'01'):
+                        make_attachment(path,{'zip_attachment':zipped},self.job)
+                    self.assertFalse(path.with_suffix('.zip').exists())
+
+    def test_process_requires_stage01_instead_of_falling_back_to_stage02(self):
+        artifacts=self.artifacts(None,None,self.job)
+        artifacts.mail_file.unlink()
+        (self.job.folder/'02_source_Oct26.xlsx').write_bytes(b'wrong stage')
+        with patch('routine.daily.run_daily',return_value=([record()],[str(artifacts.database_file)])):
+            with self.assertRaisesRegex(ValidationError,'01/05'):
+                process_daily(Path('source_Oct26.xlsx'),self.settings,self.job)
+
+    def test_changed_stage01_blocks_database_and_mail(self):
+        service,backend,events=self.service()
+        def changed(source,settings,job):
+            artifacts=self.artifacts(source,settings,job)
+            artifacts.mail_file.write_bytes(b'changed stage01')
+            return artifacts
+        service.processor=changed
+        result=service.process_message(self.reference,self.source,self.legacy,service.outlook)
+        self.assertEqual(result['status'],'failed')
+        self.assertEqual(backend.commits,0)
+        self.assertEqual(events,[])
 
     def test_unsafe_zip_does_not_write_outside_process(self):
         archive = self.root / "unsafe.zip"
@@ -261,7 +293,7 @@ class FlowTests(unittest.TestCase):
             result = process_daily(source, self.settings, self.job)
         self.assertEqual(engine.call_args.args[1], "daily")
         self.assertNotIn("BAYKAMC", engine.call_args.args[2])
-        self.assertEqual(result.mail_file.name, "02_source_Oct26.xlsx")
+        self.assertEqual(result.mail_file.name, "01_source_Oct26.xlsx")
 
     def test_daily_keeps_oa15_zero_while_adjust_rejects_it(self):
         grid = [[None] * 12 for _ in range(6)]
@@ -298,9 +330,10 @@ class Saved05Tests(unittest.TestCase):
             with self.assertRaises(ValidationError):
                 records_from_05("05_Daily_Oct26.xlsx", ("FC",))
 
-    def test_stage02_cannot_be_used_as_database_input(self):
-        with self.assertRaises(ValidationError):
-            records_from_05("02_Daily_Oct26.xlsx", ("FC",))
+    def test_mail_stages_cannot_be_used_as_database_input(self):
+        for stage in ("01", "02"):
+            with self.subTest(stage=stage), self.assertRaises(ValidationError):
+                records_from_05(stage + "_Daily_Oct26.xlsx", ("FC",))
 
 
 

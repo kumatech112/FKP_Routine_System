@@ -1,0 +1,21 @@
+{
+  "version": "0.6.5",
+  "status": "verified",
+  "unit_tests_passed": 117,
+  "unit_test_log": "Archive/tests_0.6.5.log",
+  "mail_stage": "01",
+  "database_stage": "05",
+  "checks": [
+    "Daily service prepares and sends only stage 01",
+    "Password ZIP contains only stage 01 with identical bytes",
+    "Stage 02 and stage 05 cannot be used as the mail attachment",
+    "Missing stage 01 cannot fall back to stage 02",
+    "Changed stage 01 blocks database writes and mail",
+    "Only verified saved stage 05 supplies Daily database records",
+    "Existing sent/unknown ledgers do not replay automatically"
+  ],
+  "actual_processing_evidence": "Archive/daily_0.6.5_actual/verification.json (supplemental run; packaged verification records final result)",
+  "production_emails_sent": 0,
+  "production_database_writes": 0,
+  "production_profile_modified": false
+}

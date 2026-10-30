@@ -64,7 +64,7 @@ def main():
         "version":__version__,"source_commit":source_commit,
         "commit_status":"recorded" if source_commit else "incomplete: no Git commit is available",
         "workflows":["payment_online","performance_daily","customer_documents","enforcement","performance_success_rate"],
-        "mail_stage":"02","daily_database_stage":"05","profile_storage":"Windows user DPAPI",
+        "mail_stage":"01","daily_database_stage":"05","profile_storage":"Windows user DPAPI",
         "requires_administrator":False,"dependencies":packages,
     },indent=2),encoding="utf-8")
 

@@ -28,7 +28,7 @@ def main():
         assert [app.notebook.tab(i, "text") for i in range(3)] == ["หน้าหลัก", "ประวัติการทำงาน", "ตั้งค่า"]
         sample = {"id": "fixture", "time": "2026-10-29T10:20:30+07:00",
                   "task": "Performance Daily", "status": "success", "duration": 12.3,
-                  "details": "ตรวจสอบขั้น 02 และ 05 แล้ว", "evidence": str(target)}
+                  "details": "ตรวจสอบขั้น 01 และ 05 แล้ว", "evidence": str(target)}
         dump(Path(config["logs"]) / "Logs" / "History" / "fixture.json", sample)
         app.refresh_history()
         assert len(app.history_table.tree.get_children()) == 1

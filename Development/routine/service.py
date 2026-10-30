@@ -157,7 +157,7 @@ class PerformanceService:
             job.check()
             artifacts.verify()
             if digest(attachment) != attachment_hash:
-                raise ValidationError("ไฟล์แนบขั้น 02 เปลี่ยนก่อนส่งเมล")
+                raise ValidationError("ไฟล์แนบขั้น 01 เปลี่ยนก่อนส่งเมล")
             self.ledger.update(mkey, fkey, mail="pending")
             outcome = outlook.deliver(forwarded, legacy["mail"])
             forwarded = None
@@ -179,7 +179,7 @@ class PerformanceService:
                 outlook.complete(reference, legacy["scan"])
             status = "success" if outcome == "sent" else "draft_opened"
             self.ledger.update(mkey, fkey, status=status)
-            result = {"mode": "daily", "mail_stage": "02", "database_stage": "05",
+            result = {"mode": "daily", "mail_stage": "01", "database_stage": "05",
                       "database": "verified", "mail": outcome, "records": len(artifacts.records),
                       "outputs": outputs, "archived_source": archived}
             receipt = job.finish("Performance Daily", status, "ลงฐาน Daily และส่งเมลเสร็จแล้ว"
