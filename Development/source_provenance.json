@@ -79,5 +79,14 @@
   "enforcement_batch": {
     "version": "0.6.3",
     "scope": "Exact-date same-decision multi-file intake; partial inline filename OCR supplemented by exact source identities; sequential decrypt/extract -> per-source OCR -> per-source Excel; one flat password ZIP and one delivery; recipient save isolated from other incomplete workflows."
+  },
+  "payment_latest": {
+    "version": "0.6.4",
+    "source": "owner database Query2",
+    "fields": [
+      "วันชำระล่าสุด",
+      "ยอดชำระล่าสุด"
+    ],
+    "scope": "Append exact-name Query2 text fields as columns T/U after FORECAST; preserve NULL/zero and existing input, joins and Actions; block missing fields."
   }
 }

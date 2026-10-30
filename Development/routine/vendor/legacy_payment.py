@@ -55,6 +55,8 @@ OUTPUT_EXTRA_HEADERS = [
     "TYPE_JOB",
     "เลือกตั้งNo",
     "FORECAST",
+    "วันชำระล่าสุด",
+    "ยอดชำระล่าสุด",
 ]
 
 ACTION_DEDUPLICATION_KEY_COLUMNS = ("AgreementN", "COLLCETION", "type")
@@ -296,6 +298,12 @@ def build_excel_text_values(query_headers: list[str], query_rows: list[list[Any]
     type_job_index = resolve_query_index(index_by_name, "TYPE_JOB1", fallback=11)
     election_index = resolve_query_index(index_by_name, "จ่าย/ไม่จ่ายวิชาชีพ", fallback=28)
     forecast_index = resolve_query_index(index_by_name, "FORECAST", fallback=29)
+    # Match the owner-added Query2 fields by name; never guess their positions.
+    latest_fields = ("วันชำระล่าสุด", "ยอดชำระล่าสุด")
+    missing = [name for name in latest_fields if name not in index_by_name]
+    if missing:
+        raise ValueError("Query2 ไม่มีฟิลด์ที่จำเป็น: " + ", ".join(missing))
+    latest_date_index, latest_amount_index = (index_by_name[name] for name in latest_fields)
 
     collector_indexes = [
         index_by_name.get("collectorname1"),
@@ -318,6 +326,8 @@ def build_excel_text_values(query_headers: list[str], query_rows: list[list[Any]
             normalize_excel_text(row[type_job_index]),
             normalize_excel_text(row[election_index]),
             normalize_excel_text(row[forecast_index]),
+            normalize_excel_text(row[latest_date_index]),
+            normalize_excel_text(row[latest_amount_index]),
         ])
     return text_values
 
@@ -573,6 +583,9 @@ def write_output_workbook(
         import_sheet.append(row)
     import_sheet.freeze_panes = "A2"
     import_sheet.auto_filter.ref = import_sheet.dimensions
+    for header in ("วันชำระล่าสุด", "ยอดชำระล่าสุด"):
+        column = len(source_headers) + OUTPUT_EXTRA_HEADERS.index(header) + 1
+        import_sheet.column_dimensions[import_sheet.cell(1, column).column_letter].width = 22
 
     query_sheet = workbook.create_sheet(query_sheet_name)
     query_sheet.append(query_headers)

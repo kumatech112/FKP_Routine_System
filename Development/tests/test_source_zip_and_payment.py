@@ -55,8 +55,8 @@ class PaymentPresentationTests(unittest.TestCase):
             values=default_settings();values.update(logs_root=str(root/'Logs'),output_root=str(root/'Completed'))
             settings=engine_settings(task_config(values,'payment_online'));job=RoutineJob(root/'job',settings)
             data=SimpleNamespace(rows=[['000123']],import_rows=[['000123']],headers=['acc'],round_label='R2')
-            headers=['No','TcccNo','TYPE_JOB1','จ่าย/ไม่จ่ายวิชาชีพ','FORECAST','collectorname1']
-            rows=[[1,'00001234','fixture-job','fixture-election','fixture-forecast','fixture-collector']]
+            headers=['No','TcccNo','TYPE_JOB1','จ่าย/ไม่จ่ายวิชาชีพ','FORECAST','collectorname1','วันชำระล่าสุด','ยอดชำระล่าสุด']
+            rows=[[1,'00001234','fixture-job','fixture-election','fixture-forecast','fixture-collector','29/10/2026','1,234.50']]
             dao=SimpleNamespace(QueryDefs=[],Close=lambda:None)
             with patch('routine.payment.legacy.extract_source_workbook_data',return_value=data), \
                  patch('routine.payment.legacy.import_rows_into_access'), \
@@ -74,6 +74,8 @@ class PaymentPresentationTests(unittest.TestCase):
             self.assertEqual(list(book['Query1'].values),[tuple(headers),tuple(rows[0])])
             self.assertEqual(book['Table1']['A2'].value,'000123')
             self.assertEqual(book['Table1']['B2'].value,'00001234')
+            self.assertEqual(list(book['Table1'].values)[0][-2:],('วันชำระล่าสุด','ยอดชำระล่าสุด'))
+            self.assertEqual(list(book['Table1'].values)[1][-2:],('29/10/2026','1,234.50'))
             book.close()
             delivery=root/'Delivery';delivery.mkdir()
             attachment=package_files([result.output],{'zip_attachment':True,'zip_password':'fixture-send'},SimpleNamespace(folder=delivery),result.output.stem)
@@ -83,6 +85,7 @@ class PaymentPresentationTests(unittest.TestCase):
                 self.assertEqual(archive.namelist(),[source.name])
                 sent=load_workbook(BytesIO(archive.read(source.name)))
                 self.assertEqual(sent['Query1'].sheet_state,'hidden')
+                self.assertEqual(list(sent['Table1'].values)[1][-2:],('29/10/2026','1,234.50'))
                 self.assertEqual(sent.active.title,'Table1');sent.close()
             self.assertEqual(database.read_bytes(),b'fixture MDB')
 

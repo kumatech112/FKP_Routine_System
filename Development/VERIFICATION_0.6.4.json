@@ -1,0 +1,163 @@
+{
+  "version": "0.6.4",
+  "status": "verified",
+  "unit_tests_passed": 114,
+  "unit_test_log": "Archive/tests_0.6.4.log",
+  "payment_latest": {
+    "status": "verified",
+    "real_source_rows": 10,
+    "output_columns": 21,
+    "last_columns": [
+      "FORECAST",
+      "วันชำระล่าสุด",
+      "ยอดชำระล่าสุด"
+    ],
+    "all_latest_fields_equal_query2": true,
+    "nonempty_dates": 10,
+    "nonempty_amounts": 10,
+    "existing_five_mappings_preserved": true,
+    "query_sheet_hidden": true,
+    "action_queries_executed": 0,
+    "source_files_unchanged": true,
+    "output": "\\\\10.0.0.97\\kuma$\\Z\\Projects\\FKP_Routine_System\\Archive\\payment_0.6.4_actual\\Process\\A1015_PaymentPostWO_Online_R3_28102026.xlsx",
+    "production_database_writes": 0,
+    "production_emails_sent": 0
+  },
+  "database_schema": {
+    "fields": [
+      {
+        "name": "No",
+        "type": 4
+      },
+      {
+        "name": "AgreementN",
+        "type": 10
+      },
+      {
+        "name": "TcccNo",
+        "type": 10
+      },
+      {
+        "name": "collectorname1",
+        "type": 10
+      },
+      {
+        "name": "collectorname2",
+        "type": 10
+      },
+      {
+        "name": "ชื่อพนักงาน",
+        "type": 10
+      },
+      {
+        "name": "dbo_รหัสพนักงาน GE.collectorname",
+        "type": 10
+      },
+      {
+        "name": "รหัสพนักงาน GE.collectorname",
+        "type": 10
+      },
+      {
+        "name": "WPCLNO",
+        "type": 10
+      },
+      {
+        "name": "Sub Legal stage",
+        "type": 10
+      },
+      {
+        "name": "SubLegastage_TSS",
+        "type": 10
+      },
+      {
+        "name": "TYPE_JOB1",
+        "type": 10
+      },
+      {
+        "name": "Paydate",
+        "type": 10
+      },
+      {
+        "name": "PayAmount",
+        "type": 10
+      },
+      {
+        "name": "IDCARD",
+        "type": 10
+      },
+      {
+        "name": "WPCLDS",
+        "type": 10
+      },
+      {
+        "name": "Barnch",
+        "type": 10
+      },
+      {
+        "name": "Billcode",
+        "type": 10
+      },
+      {
+        "name": "Group Com",
+        "type": 10
+      },
+      {
+        "name": "Legal Lot",
+        "type": 10
+      },
+      {
+        "name": "ชื่อ-นามสกุล",
+        "type": 10
+      },
+      {
+        "name": "Bucket OLD",
+        "type": 10
+      },
+      {
+        "name": "Staff_ID1",
+        "type": 10
+      },
+      {
+        "name": "Staff_ID2",
+        "type": 10
+      },
+      {
+        "name": "StaffID",
+        "type": 10
+      },
+      {
+        "name": "ประเภทฐานลูกหนี้_ALL",
+        "type": 10
+      },
+      {
+        "name": "ECM",
+        "type": 10
+      },
+      {
+        "name": "JobNo",
+        "type": 10
+      },
+      {
+        "name": "จ่าย/ไม่จ่ายวิชาชีพ",
+        "type": 10
+      },
+      {
+        "name": "FORECAST",
+        "type": 10
+      },
+      {
+        "name": "วันชำระล่าสุด",
+        "type": 10
+      },
+      {
+        "name": "ยอดชำระล่าสุด",
+        "type": 10
+      }
+    ],
+    "new_fields_present": true,
+    "production_database_writes": 0
+  },
+  "production_database_writes": 0,
+  "production_emails_sent": 0,
+  "production_profile_modified": false
+}
