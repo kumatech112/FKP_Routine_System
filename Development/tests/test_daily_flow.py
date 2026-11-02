@@ -289,11 +289,13 @@ class FlowTests(unittest.TestCase):
         artifacts = self.artifacts(None, None, self.job)
         source = Path("source_Oct26.xlsx")
         with patch("routine.daily.run_daily", return_value=([record()], [str(artifacts.database_file)])) as engine, \
-             patch("routine.daily.records_from_05", return_value=(record(),)):
+             patch("routine.daily.records_from_05", return_value=(record(),)), \
+             patch("routine.daily.prepare_mail_file", return_value={}) as presentation:
             result = process_daily(source, self.settings, self.job)
         self.assertEqual(engine.call_args.args[1], "daily")
         self.assertNotIn("BAYKAMC", engine.call_args.args[2])
         self.assertEqual(result.mail_file.name, "01_source_Oct26.xlsx")
+        presentation.assert_called_once_with(artifacts.mail_file, list(DAILY_PRODUCTS), self.job)
 
     def test_daily_keeps_oa15_zero_while_adjust_rejects_it(self):
         grid = [[None] * 12 for _ in range(6)]

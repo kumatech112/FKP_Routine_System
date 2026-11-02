@@ -4,6 +4,7 @@ from pathlib import Path
 import re
 
 from .config import DAILY_PRODUCTS
+from .performance_presentation import prepare_mail_file
 from .vendor.fkp.daily import run_daily, is_sequence
 from .vendor.fkp.database import Database, ComSql
 from .vendor.fkp.domain import Detail, Month, ValidationError, key, number, validate_details
@@ -68,6 +69,7 @@ def process_daily(source, settings, job):
     if outputs != [str(stage05)] or not stage01.is_file() or not stage05.is_file():
         raise ValidationError("ผลลัพธ์ Daily ขั้น 01/05 ไม่ครบ")
     before = digest(stage05)
+    presentation = prepare_mail_file(stage01, list(DAILY_PRODUCTS), job)
     records = records_from_05(stage05)
     left = {r.identity: r for r in validate_details(expected)}
     right = {r.identity: r for r in records}
@@ -78,7 +80,7 @@ def process_daily(source, settings, job):
         "mode": "daily", "mail_stage": "01", "database_stage": "05",
         "mail_file": str(stage01), "database_file": str(stage05),
         "mail_sha256": result.mail_hash, "database_sha256": result.database_hash,
-        "records": len(records),
+        "records": len(records), "mail_presentation": presentation,
     })
     return result
 

@@ -1,0 +1,27 @@
+name: Performance step 01 presentation
+
+on:
+  pull_request:
+    paths:
+      - Development/routine/performance_presentation.py
+      - Development/routine/daily.py
+      - Development/tests/test_performance_presentation.py
+      - .github/workflows/performance-presentation.yml
+
+permissions:
+  contents: read
+
+jobs:
+  presentation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Check Python syntax
+        run: python -m compileall -q Development
+      - name: Test presentation guards with synthetic workbooks
+        env:
+          PYTHONPATH: Development
+        run: python -m unittest discover -s Development/tests -p test_performance_presentation.py -v
